@@ -8,7 +8,7 @@ export class LaunchTower {
     #commsPtr: UnsafeOwnedPointer;
     #deconstructLaunchTower: (launchTower: LaunchTower) => void;
     #launchPad: WeakRef<LaunchPad>;
-    #commsCallback: UnsafeCallbackPointer<{ parameters: [], result: "u8" }>;
+    #commsCallback: UnsafeCallbackPointer<{ parameters: [], result: "void" }>;
     #commsTimeout?: number;
     #commsQueue = false;
 
@@ -30,7 +30,7 @@ export class LaunchTower {
         lc1.setLaunchTowerComms(this.#ptr)
         this.#commsCallback = registerCallback({
             parameters: [],
-            result: "u8",
+            result: "void",
             // This CB may and will be called from any thread,
             // most probably never the event loop thread but that
             // may also be possible if a rocket targeting the
@@ -50,8 +50,7 @@ export class LaunchTower {
             } else {
                 this.#commsQueue = true;
             }
-            return 0;
-        })
+        });
         lc1.setCommsCallback(this.#commsPtr, this.#commsCallback);
     }
 
@@ -70,7 +69,7 @@ export class LaunchTower {
 
     launchRocket(rocket: Rocket) {
         const rocketPtr = lc1.prepareRocket(this.#ptr);
-        rocket[launch](rocketPtr);
+        return rocket[launch](rocketPtr);
     }
 
     // createLandingSite(landingCallback: LandingCallback) { return new LandingSize(this, new Deno.UnsafePointer(0n), landingCallback); }

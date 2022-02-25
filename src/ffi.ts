@@ -59,7 +59,7 @@ export const lc1 = Deno.dlopen(libpath, {
   setCommsCallback: {
     parameters: [
       "pointer",
-      "pointer", // Callback fn() -> u8
+      "pointer", // Callback fn()
     ],
     result: "void",
   },
