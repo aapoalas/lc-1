@@ -100,6 +100,11 @@ export enum RocketError {
   LOST = -1,
 }
 
+Object.freeze(RocketStatus);
+Object.freeze(RocketMission);
+Object.freeze(TargetStatus);
+Object.freeze(RocketError);
+
 export const launch = Symbol("[[launch]]");
 
 export interface TelemetryData<T> {

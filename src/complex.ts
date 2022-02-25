@@ -2,6 +2,13 @@ import { lc1 } from "./ffi.ts";
 import { LaunchPad } from "./launch_pad.ts";
 import { cstr, UnsafeOwnedPointer } from "./utils.ts";
 
+export {
+    RocketError,
+    RocketMission,
+    RocketStatus,
+} from "./rocket.ts";
+export type { RocketOpts } from "./rocket.ts"
+
 let activeLaunchPad: LaunchPad | null = null;
 
 const assertNoOverlap = (): void => {
