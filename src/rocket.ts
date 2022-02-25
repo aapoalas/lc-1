@@ -12,7 +12,7 @@ const rocketStreamMap = new Map<
 const telemetryJsCallback = (
   rocketStatus: RocketStatus,
   targetStatus: TargetStatus,
-  rocket: Deno.UnsafePointer
+  rocket: Deno.UnsafePointer,
 ) => {
   const controller = rocketStreamMap.get(rocket.value);
   if (!controller) {
@@ -37,8 +37,8 @@ const telemetryJsCallback = (
     }
     controller.error(
       new Error(
-        `Rocket failed to reach target with error code: ${RocketError[code]}`
-      )
+        `Rocket failed to reach target with error code: ${RocketError[code]}`,
+      ),
     );
   }
   if (!lc1.isFlightOngoing(rocket)) {
@@ -48,8 +48,8 @@ const telemetryJsCallback = (
     controller.close();
     rocketStreamMap.delete(rocket.value);
     if (rocketStreamMap.size === 0) {
-        // No flying rockets, telemetry callback is not relevant.
-        unrefCallback(telemetryCallback);
+      // No flying rockets, telemetry callback is not relevant.
+      unrefCallback(telemetryCallback);
     }
   }
 };
@@ -64,7 +64,7 @@ const telemetryCallback = registerCallback(
     result: "void",
   },
   // @ts-expect-error oof
-  telemetryJsCallback
+  telemetryJsCallback,
 );
 
 // This callback should not keep Deno alive while it is not being used.
@@ -132,7 +132,7 @@ export class Rocket {
     id: string,
     mission: RocketMission,
     target: string,
-    opts?: RocketOpts
+    opts?: RocketOpts,
   ) {
     this.id = id;
     this.mission = mission;
@@ -154,7 +154,7 @@ export class Rocket {
   }
 
   [launch](
-    missionPtr: Deno.UnsafePointer
+    missionPtr: Deno.UnsafePointer,
   ): ReadableStream<{ payload: TelemetryData<unknown>; status: TargetStatus }> {
     this.#ptr = missionPtr;
     this.#inflight = true;
@@ -177,9 +177,9 @@ export class Rocket {
       status: TargetStatus;
     }>({
       start(controller) {
-          if (rocketStreamMap.size === 0) {
-              refCallback(telemetryCallback);
-          }
+        if (rocketStreamMap.size === 0) {
+          refCallback(telemetryCallback);
+        }
         rocketStreamMap.set(missionPtr.value, controller);
         lc1.launchRocket(missionPtr, mission, cstr(target), telemetryCallback);
       },
@@ -188,7 +188,7 @@ export class Rocket {
         lc1.triggerFTS(missionPtr);
         rocketStreamMap.delete(missionPtr.value);
         if (rocketStreamMap.size === 0) {
-            unrefCallback(telemetryCallback);
+          unrefCallback(telemetryCallback);
         }
       },
     });
@@ -210,7 +210,7 @@ export class Rocket {
       lc1.triggerFTS(this.#ptr);
       rocketStreamMap.delete(this.#ptr.value);
       if (rocketStreamMap.size === 0) {
-          unrefCallback(telemetryCallback);
+        unrefCallback(telemetryCallback);
       }
     }
     this.#inflight = false;

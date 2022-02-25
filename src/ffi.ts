@@ -154,7 +154,7 @@ export const lc1 = Deno.dlopen(libpath, {
 }).symbols;
 
 export class UnsafeCallbackPointer<
-  T extends Deno.ForeignFunction
+  T extends Deno.ForeignFunction,
 > extends Deno.UnsafePointer {
   definition: T;
   callback: Deno.StaticForeignFunction<T>;
@@ -189,12 +189,10 @@ export class UnsafeCallbackPointer<
   }
 }
 
-/**
- *
- */
+/** */
 export const registerCallback = <T extends Deno.ForeignFunction>(
   definition: T,
-  callback: Deno.StaticForeignFunction<T>
+  callback: Deno.StaticForeignFunction<T>,
 ) => new UnsafeCallbackPointer(definition, callback);
 
 export const unrefCallback = (callbackPointer: UnsafeCallbackPointer<any>) => {

@@ -27,7 +27,7 @@ export const createCustomLaunchPad = (
   } = {
     padId: 0,
     towerId: 0,
-  }
+  },
 ) => {
   assertNoOverlap();
   const nameBuffer = cstr(name);
@@ -40,11 +40,11 @@ export const createCustomLaunchPad = (
     streetAddressBuffer,
     zipCodeBuffer,
     opts.padId,
-    opts.towerId
+    opts.towerId,
   );
   if (configurationPointer.value == 0n) {
     throw new Error(
-      "Failed to create launch pad, could not create custom LC configuration"
+      "Failed to create launch pad, could not create custom LC configuration",
     );
   }
   const launchPadPointer = lc1.createLaunchPad(configurationPointer, 1);
@@ -62,7 +62,7 @@ export const createManagedLaunchPad = () => {
   lc1.lcConfiguration(configurationPointer);
   if (configurationPointer.value == 0n) {
     throw new Error(
-      "Failed to create launch pad, could not get managed pad configuration"
+      "Failed to create launch pad, could not get managed pad configuration",
     );
   }
   const launchPadPointer = lc1.createLaunchPad(configurationPointer, 1);

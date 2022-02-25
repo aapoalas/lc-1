@@ -15,8 +15,8 @@ export class LaunchPad {
     this.#ptr = ptr;
     this.name = pointerToString(lc1.getLaunchPadName(ptr));
     let decomissionResolve: () => void;
-    this.#decomissionPromise = new Promise<void>(resolve => {
-        decomissionResolve = resolve;
+    this.#decomissionPromise = new Promise<void>((resolve) => {
+      decomissionResolve = resolve;
     });
     this.#decomissionResolve = decomissionResolve!;
   }
@@ -28,7 +28,7 @@ export class LaunchPad {
   addLaunchPadPublicData<T>(
     _name: string,
     _value: { value: T; type: string },
-    _publishToGovernmentSystems: boolean
+    _publishToGovernmentSystems: boolean,
   ) {
     throw new Error("todo");
   }
@@ -40,31 +40,31 @@ export class LaunchPad {
   }
 
   constructorLaunchTower(name: string): LaunchTower {
-      const launchTowerPointer = lc1.createLaunchTower(this.#ptr, cstr(name));
-      const launchTower = new LaunchTower(
-          name,
-          this,
-          launchTowerPointer,
-          this.#deconstructLaunchTower.bind(this),
-      );
-      this.#launchTowers.add(launchTower);
-      return launchTower;
+    const launchTowerPointer = lc1.createLaunchTower(this.#ptr, cstr(name));
+    const launchTower = new LaunchTower(
+      name,
+      this,
+      launchTowerPointer,
+      this.#deconstructLaunchTower.bind(this),
+    );
+    this.#launchTowers.add(launchTower);
+    return launchTower;
   }
 
   getDecomissionPromise(): Promise<void> {
-      if (this.#decomissioned) {
-          throw new Error("Launch pad decomissioned");
-      }
-      return this.#decomissionPromise;
+    if (this.#decomissioned) {
+      throw new Error("Launch pad decomissioned");
+    }
+    return this.#decomissionPromise;
   }
 
   decomissionLaunchPad() {
     if (this.#decomissioned) {
-        return;
+      return;
     }
     this.#decomissioned = true;
     for (const lt of this.#launchTowers) {
-        lt.deconstruct();
+      lt.deconstruct();
     }
     // TODO: delete LaunchPad #ptr data
     this.#decomissionResolve();
